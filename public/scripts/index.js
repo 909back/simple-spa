@@ -1,4 +1,4 @@
-import PageLayout from './components/PageLayout.js';
+import PageLayout from './components/page-layout.js';
 import DraftCard from './components/draft-card.js';
 import ConfirmDialog from './components/confirm-dialog.js';
 import routes from './routes/index.js';

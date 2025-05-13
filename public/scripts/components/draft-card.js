@@ -9,12 +9,9 @@ class DraftCard extends HTMLElement {
     connectedCallback() {
         this._render();
     }
-    disconnectedCallback() {
-    }
-    connectedMoveCallback() {
-    }
-    adoptedCallback() {
-    }
+    disconnectedCallback() { }
+    connectedMoveCallback() { }
+    adoptedCallback() { }
     attributeChangedCallback(name, oldValue, newValue) {
         switch (name) {
             case "title":

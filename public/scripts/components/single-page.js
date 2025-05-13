@@ -71,23 +71,11 @@ class SinglePage {
         if (prevContent.length)
             prevContent.forEach((prev) => prev.remove());
         const layout = document.createElement("page-layout");
-        document.startViewTransition(() => {
-            appEl.appendChild(layout);
-            layout.setAttribute("title", page.title);
-            layout.updateContent(page.content);
-            if (page.style)
-                layout.updateStyle(page.style);
-            if (page.href === "/confirm-dialog") {
-                const target = layout.shadowRoot;
-                if (!target)
-                    return;
-                const trigger = target?.getElementById("trigger");
-                const modal = target.querySelector("confirm-dialog");
-                trigger?.addEventListener("click", () => {
-                    modal.openModal();
-                });
-            }
-        });
+        appEl.appendChild(layout);
+        layout.setAttribute("title", page.title);
+        layout.updateContent(page.content);
+        if (page.style)
+            layout.updateStyle(page.style);
     }
 }
 function shouldInterceptNavigation(navigateEvent) {

@@ -1,15 +1,14 @@
 import type { Route } from "../routes";
-import type PageLayout from "./PageLayout";
+import type PageLayout from "./page-layout";
 import routes from "../routes/index.js";
 import type ConfirmDialog from "./confirm-dialog";
 
 class SinglePage {
-  private currentPath: string = '/';
+  private currentPath: string = "/";
   private app: HTMLElement | null = null;
-  private appId = 'app'
+  private appId = "app";
 
   constructor(page: Route) {
-
     this.app = document.getElementById(this.appId);
     this.setupEventListeners();
     this.handleInitialLoad();
@@ -17,9 +16,9 @@ class SinglePage {
 
   private setupEventListeners(): void {
     // Navigation API 이벤트 리스너 등록
-    window.navigation.addEventListener('navigate', (event: any) => {
+    window.navigation.addEventListener("navigate", (event: any) => {
       const navigateEvent = event as NavigateEvent;
-      
+
       // 같은 오리진에서의 이동만 처리
       if (shouldInterceptNavigation(navigateEvent)) {
         const url = new URL(navigateEvent.destination.url);
@@ -27,10 +26,10 @@ class SinglePage {
         navigateEvent.intercept({
           handler: async () => {
             this.navigate(path);
-          }
+          },
         });
       }
-    })
+    });
   }
 
   private handleInitialLoad(): void {
@@ -39,18 +38,17 @@ class SinglePage {
     this.navigate(path);
   }
 
-
   private navigate(path: string): void {
     // 기본 경로 처리
-    if (path === '/') {
+    if (path === "/") {
       this.renderContent(routes[0]);
-      this.currentPath = '/';
+      this.currentPath = "/";
       return;
     }
-    
-    const normalizedPath = path.startsWith('/') ? path.substring(1) : path;
-    const route = routes.find(r => {
-      const routePath = r.href.startsWith('/') ? r.href.substring(1) : r.href;
+
+    const normalizedPath = path.startsWith("/") ? path.substring(1) : path;
+    const route = routes.find((r) => {
+      const routePath = r.href.startsWith("/") ? r.href.substring(1) : r.href;
       return routePath === normalizedPath;
     });
 
@@ -66,10 +64,10 @@ class SinglePage {
   private renderContent(route: Route): void {
     if (this.app) {
       document.title = `${route.title}`;
-      this.render(route)
+      this.render(route);
     }
   }
-  
+
   private renderNotFound(): void {
     if (this.app) {
       this.app.innerHTML = `
@@ -79,31 +77,22 @@ class SinglePage {
           <a href="/">Go back to home</a>
         </div>
       `;
-      document.title = '404 Not Found';
+      document.title = "404 Not Found";
     }
   }
-  
+
   render(page: Route) {
-    const appEl = this.app
-    if(!appEl) throw Error('Cant not find containerEl')
-    const prevContent = Array.from(appEl.children)
-    if(prevContent.length) prevContent.forEach(prev => prev.remove())
+    const appEl = this.app;
+    if (!appEl) throw Error("Cant not find containerEl");
+    const prevContent = Array.from(appEl.children);
+    if (prevContent.length) prevContent.forEach((prev) => prev.remove());
     // app init
-    const layout = document.createElement('page-layout') as PageLayout
-    appEl.appendChild(layout)
-    layout.setAttribute('title', page.title)
-    layout.updateContent(page.content)
-    if(page.style) layout.updateStyle(page.style)
-    if(page.href === '/confirm-dialog') {
-      const target = layout.shadowRoot
-      if(!target) return
-      const trigger = target?.getElementById("trigger");
-      const modal = target.querySelector('confirm-dialog') as ConfirmDialog;
-      trigger?.addEventListener('click', () => {
-        modal.openModal();
-      });
-    }
-  } 
+    const layout = document.createElement("page-layout") as PageLayout;
+    appEl.appendChild(layout);
+    layout.setAttribute("title", page.title);
+    layout.updateContent(page.content);
+    if (page.style) layout.updateStyle(page.style);
+  }
 }
 
 function shouldInterceptNavigation(navigateEvent: NavigateEvent): boolean {
@@ -116,5 +105,4 @@ function shouldInterceptNavigation(navigateEvent: NavigateEvent): boolean {
   );
 }
 
-export default SinglePage
-
+export default SinglePage;

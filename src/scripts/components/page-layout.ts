@@ -1,9 +1,9 @@
 import type ConfirmDialog from "./confirm-dialog";
 
 class PageLayout extends HTMLElement {
-  static observedAttributes = ['title']; // Atrributes List to Observe
+  static observedAttributes = ["title"]; // Atrributes List to Observe
   private _internals;
-	private pageTitle = '';
+  private pageTitle = "";
   constructor() {
     // Always call super first in constructor
     super();
@@ -12,7 +12,7 @@ class PageLayout extends HTMLElement {
 
   connectedCallback() {
     // Custom element added to page.
-		this.render()
+    this.render();
   }
 
   disconnectedCallback() {
@@ -29,36 +29,40 @@ class PageLayout extends HTMLElement {
 
   attributeChangedCallback(name: string, oldValue: string, newValue: string) {
     // Attribute has changed.
-		switch(name) {
-			case 'title' : this.pageTitle = newValue; this.update.title(newValue); break
-			default: break;
-		}
+    switch (name) {
+      case "title":
+        this.pageTitle = newValue;
+        this.update.title(newValue);
+        break;
+      default:
+        break;
+    }
   }
 
+  private update = {
+    title: this.rerender.bind(this, "h1"),
+    content: this.rerender.bind(this, "main"),
+    style: (style: string) => {
+      const stylesheet = new CSSStyleSheet();
+      stylesheet.replaceSync(style);
 
+      const root = this.shadowRoot;
+      if (!root) return;
+      root.adoptedStyleSheets = [
+        ...(root.adoptedStyleSheets ?? []),
+        stylesheet,
+      ];
+    },
+  };
 
-	private update = {
-		title: this.rerender.bind(this, 'h1'),
-		content: this.rerender.bind(this, 'main'),
-		style: (style: string) => {
-			const stylesheet = new CSSStyleSheet()
-			stylesheet.replaceSync(style)
+  updateContent = this.update.content;
+  updateStyle = this.update.style;
 
-			const root = this.shadowRoot
-			if(!root) return
-			root.adoptedStyleSheets = [...root.adoptedStyleSheets??[], stylesheet]
-		}
-	}
-
-	updateContent = this.update.content
-	updateStyle = this.update.style
-
-	private rerender(selector: string, content: string) {
-		const target = this.shadowRoot?.querySelector(selector)
-		console.log(target, this.shadowRoot)
-		if(!target) throw Error('Can not rerender');
-		target.innerHTML = content
-	}
+  private rerender(selector: string, content: string) {
+    const target = this.shadowRoot?.querySelector(selector);
+    if (!target) throw Error("Can not rerender");
+    target.innerHTML = content;
+  }
 
   private createElement(
     tag: keyof HTMLElementTagNameMap,
@@ -153,18 +157,19 @@ class PageLayout extends HTMLElement {
       main = this.createElement("main"),
       footer = this.createElement("footer"),
       copy = this.createElement("span", { className: "copy" });
-		h1.textContent = this.pageTitle;
-		header.appendChild(h1)
+			
+    h1.textContent = this.pageTitle;
+    header.appendChild(h1);
 
-		main.innerHTML = `<p>loading...</p>`
-		
-		copy.innerHTML = `&copy; bis909`
-		footer.appendChild(copy)
+    main.innerHTML = `<p>loading...</p>`;
 
-		wrapper.append(header, main, footer)
-		shadow.adoptedStyleSheets = [stylesheet]
-		shadow.appendChild(wrapper)
+    copy.innerHTML = `&copy; bis909`;
+    footer.appendChild(copy);
+
+    wrapper.append(header, main, footer);
+    shadow.adoptedStyleSheets = [stylesheet];
+    shadow.appendChild(wrapper);
   }
 }
 
-export default PageLayout
+export default PageLayout;
