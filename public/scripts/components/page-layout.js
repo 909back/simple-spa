@@ -8,6 +8,9 @@ class PageLayout extends HTMLElement {
     }
     connectedCallback() {
         this.render();
+        const root = this.shadowRoot;
+        if (!root)
+            return;
     }
     disconnectedCallback() {
     }
@@ -42,8 +45,11 @@ class PageLayout extends HTMLElement {
     };
     updateContent = this.update.content;
     updateStyle = this.update.style;
+    findElement(selector) {
+        return this.shadowRoot?.querySelector(selector);
+    }
     rerender(selector, content) {
-        const target = this.shadowRoot?.querySelector(selector);
+        const target = this.findElement(selector);
         if (!target)
             throw Error("Can not rerender");
         target.innerHTML = content;

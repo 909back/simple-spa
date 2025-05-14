@@ -1,6 +1,7 @@
 import type { Route } from "../routes";
 import type PageLayout from "./page-layout";
 import routes from "../routes/index.js";
+import type DraftCard from "./draft-card";
 import type ConfirmDialog from "./confirm-dialog";
 
 class SinglePage {
@@ -18,7 +19,6 @@ class SinglePage {
     // Navigation API 이벤트 리스너 등록
     window.navigation.addEventListener("navigate", (event: any) => {
       const navigateEvent = event as NavigateEvent;
-
       // 같은 오리진에서의 이동만 처리
       if (shouldInterceptNavigation(navigateEvent)) {
         const url = new URL(navigateEvent.destination.url);
@@ -84,6 +84,8 @@ class SinglePage {
   render(page: Route) {
     const appEl = this.app;
     if (!appEl) throw Error("Cant not find containerEl");
+
+    // reset content
     const prevContent = Array.from(appEl.children);
     if (prevContent.length) prevContent.forEach((prev) => prev.remove());
     // app init
@@ -92,6 +94,13 @@ class SinglePage {
     layout.setAttribute("title", page.title);
     layout.updateContent(page.content);
     if (page.style) layout.updateStyle(page.style);
+
+    const trigger = layout.findElement("#trigger");
+    const modal = layout.findElement("confirm-dialog") as ConfirmDialog;
+    console.log(trigger);
+    trigger?.addEventListener("click", () => {
+      modal.openModal();
+    });
   }
 }
 

@@ -76,6 +76,12 @@ class SinglePage {
         layout.updateContent(page.content);
         if (page.style)
             layout.updateStyle(page.style);
+        const trigger = layout.findElement("#trigger");
+        const modal = layout.findElement("confirm-dialog");
+        console.log(trigger);
+        trigger?.addEventListener("click", () => {
+            modal.openModal();
+        });
     }
 }
 function shouldInterceptNavigation(navigateEvent) {

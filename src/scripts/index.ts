@@ -10,8 +10,8 @@ customElements.define('page-layout', PageLayout)
 
 
 const trigger = document.getElementById("trigger");
-console.log(trigger)
 const modal = document.querySelector('confirm-dialog') as ConfirmDialog;
+console.log(trigger)
 trigger?.addEventListener('click', () => {
     modal.openModal();
 });

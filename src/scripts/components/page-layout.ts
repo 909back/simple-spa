@@ -13,6 +13,10 @@ class PageLayout extends HTMLElement {
   connectedCallback() {
     // Custom element added to page.
     this.render();
+
+    const root = this.shadowRoot
+    if(!root) return
+
   }
 
   disconnectedCallback() {
@@ -58,8 +62,11 @@ class PageLayout extends HTMLElement {
   updateContent = this.update.content;
   updateStyle = this.update.style;
 
+  findElement(selector: string) {
+    return this.shadowRoot?.querySelector(selector);
+  }
   private rerender(selector: string, content: string) {
-    const target = this.shadowRoot?.querySelector(selector);
+    const target = this.findElement(selector);
     if (!target) throw Error("Can not rerender");
     target.innerHTML = content;
   }
@@ -157,7 +164,7 @@ class PageLayout extends HTMLElement {
       main = this.createElement("main"),
       footer = this.createElement("footer"),
       copy = this.createElement("span", { className: "copy" });
-			
+
     h1.textContent = this.pageTitle;
     header.appendChild(h1);
 

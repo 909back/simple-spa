@@ -30,7 +30,7 @@ const routes = [
         title: "Confirm-dialog",
         href: "/confirm-dialog",
         content: `
-      <button id="trigger">
+      <button id="trigger" open-confirm-dialog>
         <span class="label" data-label="open modal"></span>
       </button>
       <confirm-dialog title="Custom Element" description="One of the key features of web components is the ability to create custom elements: that is, HTML elements whose behavior is defined by the web developer, that extend the set of elements available in the browser."></confirm-dialog>

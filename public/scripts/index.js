@@ -7,8 +7,8 @@ customElements.define('confirm-dialog', ConfirmDialog);
 customElements.define("draft-card", DraftCard);
 customElements.define('page-layout', PageLayout);
 const trigger = document.getElementById("trigger");
-console.log(trigger);
 const modal = document.querySelector('confirm-dialog');
+console.log(trigger);
 trigger?.addEventListener('click', () => {
     modal.openModal();
 });

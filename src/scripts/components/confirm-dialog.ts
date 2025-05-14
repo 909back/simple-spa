@@ -9,17 +9,17 @@ class ConfirmDialog extends HTMLElement {
         this._internals = this.attachInternals();
     }
     connectedCallback() {
-        console.log("Custom element added to page.");
+        // console.log("Custom element added to page.");
         this._setShadowDom();
     }
     disconnectedCallback() {
-        console.log("Custom element removed from page.");
+        // console.log("Custom element removed from page.");
     }
     connectedMoveCallback() {
-        console.log("Custom element moved with moveBefore()");
+        // console.log("Custom element moved with moveBefore()");
     }
     adoptedCallback() {
-        console.log("Custom element moved to new page.");
+        // console.log("Custom element moved to new page.");
     }
     attributeChangedCallback(name: string, oldValue: string, newValue: string) {
         console.log(`Attribute ${name} has changed.`);

@@ -1,43 +1,60 @@
 class DraftCard extends HTMLElement {
-    static observedAttributes = ["title", "description", "link"];
-    _title = '';
-    _description = '';
-    _link = '';
-    constructor() {
-        super();
+  static observedAttributes = ["title", "description", "link"];
+  _title = "";
+  _description = "";
+  _link = "";
+  constructor() {
+    super();
+  }
+  connectedCallback() {
+    this._render();
+  }
+  disconnectedCallback() {}
+  connectedMoveCallback() {}
+  adoptedCallback() {}
+  attributeChangedCallback(name: string, oldValue: string, newValue: string) {
+    switch (name) {
+      case "title":
+        this._title = newValue;
+        break;
+      case "description":
+        this._description = newValue;
+        break;
+      case "link":
+        this._link = newValue;
+        break;
+      default:
+        break;
     }
-    connectedCallback() {
-        this._render();
-    }
-    disconnectedCallback() {}
-    connectedMoveCallback() {}
-    adoptedCallback() {}
-    attributeChangedCallback(name: string, oldValue: string, newValue: string) {
-        switch (name) {
-            case "title":
-                this._title = newValue;
-                break;
-            case "description":
-                this._description = newValue;
-                break;
-            case "link":
-                this._link = newValue;
-                break;
-            default: break;
-        }
-    }
-    _createElement(tag: any, className?: any) {
-        const el = document.createElement(tag);
-        if (className)
-            Array.isArray(className) ? el.classList.add(...className) : el.classList.add(className);
-        return el;
-    }
-    _render() {
-        const shadow = this.attachShadow({
-            mode: "open",
-        });
-        const stylesheet = new CSSStyleSheet();
-        stylesheet.replaceSync(`
+  }
+
+  disconnectedAnimation() {
+    const paperEl = this.shadowRoot?.querySelector(".paper") as HTMLElement;
+    console.log(paperEl);
+    if (!paperEl) return;
+    document.startViewTransition(() => {
+      paperEl.style.setProperty("z-index", "9999");
+      paperEl.style.setProperty(
+        "transform",
+        "translate(0, -100px) scale(2, 2)"
+      );
+    });
+  }
+
+  _createElement(tag: any, className?: any) {
+    const el = document.createElement(tag);
+    if (className)
+      Array.isArray(className)
+        ? el.classList.add(...className)
+        : el.classList.add(className);
+    return el;
+  }
+  _render() {
+    const shadow = this.attachShadow({
+      mode: "open",
+    });
+    const stylesheet = new CSSStyleSheet();
+    stylesheet.replaceSync(`
           *, *::after, *::before {
             margin: 0;
             padding: 0;
@@ -122,18 +139,26 @@ class DraftCard extends HTMLElement {
             box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.05) 0px 8px 32px;
             transform: translate3d(0, calc(var(--tipH) - 5px), 0);
             transition: transform .3s ease;
+            view-transition-name: card;
+
           }
     `);
-        const link = this._createElement('a'), container = this._createElement('div', 'container'), inner = this._createElement('div', 'inner'), cover = this._createElement('div', 'cover'), title = this._createElement('p', 'title'), desc = this._createElement('p', 'desc'), paper = this._createElement('div', 'paper');
-        link.setAttribute('href', this._link);
-        title.append(this._title);
-        desc.append(this._description);
-        cover.append(title, desc);
-        inner.append(paper, cover);
-        container.append(inner);
-        link.appendChild(container);
-        shadow.appendChild(link);
-        shadow.adoptedStyleSheets = [stylesheet];
-    }
+    const link = this._createElement("a"),
+      container = this._createElement("div", "container"),
+      inner = this._createElement("div", "inner"),
+      cover = this._createElement("div", "cover"),
+      title = this._createElement("p", "title"),
+      desc = this._createElement("p", "desc"),
+      paper = this._createElement("div", "paper");
+    link.setAttribute("href", this._link);
+    title.append(this._title);
+    desc.append(this._description);
+    cover.append(title, desc);
+    inner.append(paper, cover);
+    container.append(inner);
+    link.appendChild(container);
+    shadow.appendChild(link);
+    shadow.adoptedStyleSheets = [stylesheet];
+  }
 }
 export default DraftCard;
